@@ -1,8 +1,8 @@
 import {Context, Hono} from 'hono'
 import {cors} from "hono/cors";
-import connectDB from "../config/db";
-import Brand from "../models/brands";
-import cars from "../routes/cars";
+import connectDB from "./config/db";
+import Brand from "./models/brands";
+import cars from "./routes/cars";
 
 const app = new Hono()
 

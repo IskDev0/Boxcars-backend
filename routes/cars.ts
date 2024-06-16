@@ -1,43 +1,16 @@
 import {Context, Hono} from "hono";
-import Car from "../models/car";
+import {deleteCar, getCar, getCars, postCar, updateCar} from "../controllers/cars/carsContollers";
 
 const cars = new Hono()
 
-cars.get("/", async (c: Context) => {
-    try {
-        const type: string | undefined = c.req.query("type");
+cars.get("/:id", async (c: Context) => getCar(c));
 
-        const cars = await Car.find();
+cars.get("/", async (c: Context) => getCars(c));
 
-        if (!cars) {
-            return c.json({ error: "No cars found" });
-        }
+cars.post("/", async (c: Context) => postCar(c))
 
-        if (type === "short") {
-            const carsList = cars.map(car => ({
-                ...car.short_data,
-                _id: car.id
-            }));
-            return c.json(carsList);
-        } else if (type) {
-            return c.json({ error: "Bad request" });
-        }
+cars.delete("/:id", async (c: Context) => deleteCar(c))
 
-        return c.json(cars);
-
-    } catch (error: unknown) {
-        console.error(error);
-        return c.json({ error: (error as Error).message });
-    }
-});
-
-
-cars.post("/", async (c: Context) => {
-    const body = await c.req.json()
-
-    const car = new Car(body)
-    const createdCar = await car.save()
-    return c.json(createdCar.short_data)
-})
+cars.put("/:id", async (c: Context) => updateCar(c))
 
 export default cars
