@@ -3,16 +3,18 @@ import {cors} from "hono/cors";
 import connectDB from "./config/db";
 import Brand from "./models/brands";
 import cars from "./routes/cars";
+import auth from "./routes/auth";
 
 const app = new Hono()
 
-connectDB()
+connectDB().then(r => console.log("MongoDB connected"))
 
 app.use("*", cors({
     origin: process.env.FRONTEND_URL as string,
 }))
 
 app.route("/cars", cars)
+app.route("/auth", auth)
 
 app.get("/brands", async (c:Context) => {
     const brands = await Brand.find()
