@@ -4,6 +4,7 @@ import connectDB from "./config/db";
 import Brand from "./models/brands";
 import cars from "./routes/cars";
 import auth from "./routes/auth";
+import review from "./routes/review";
 
 const app = new Hono()
 
@@ -15,13 +16,14 @@ app.use("*", cors({
 
 app.route("/cars", cars)
 app.route("/auth", auth)
+app.route("/review", review)
 
-app.get("/brands", async (c:Context) => {
+app.get("/brands", async (c: Context) => {
     const brands = await Brand.find()
     return c.json(brands)
 })
 
 export default {
-  port: process.env.PORT || 3000,
-  fetch: app.fetch
+    port: process.env.PORT || 3000,
+    fetch: app.fetch
 }
