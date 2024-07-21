@@ -1,6 +1,7 @@
 import {Context} from "hono";
 import Car from "../../models/car";
 import {isValidObjectId} from "mongoose";
+import calculateLoanPayment from "../../utils/car/calculateLoanPayment";
 
 async function getCars(c: Context) {
 
@@ -119,10 +120,35 @@ async function updateCar(c: Context) {
 
 }
 
+async function calculateLoan(c: Context) {
+    let {price, interestRate, term, initialPayment} = await c.req.json()
+
+    let missingFields: string[] = []
+
+    if (!price) {
+        missingFields.push("Price")
+    }
+
+    if (!interestRate) {
+        missingFields.push("Interest rate")
+    }
+
+    if (!term) {
+        missingFields.push("Term")
+    }
+
+    if (missingFields.length > 0) {
+        return c.json({message: `${missingFields.join(", ")} is missing`}, 400)
+    }
+
+    return c.json(calculateLoanPayment(price, interestRate, term, initialPayment))
+}
+
 export {
     getCars,
     getCar,
     postCar,
     deleteCar,
-    updateCar
+    updateCar,
+    calculateLoan
 }
