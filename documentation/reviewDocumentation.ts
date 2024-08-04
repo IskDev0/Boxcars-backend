@@ -9,7 +9,9 @@ const getReviewsDoc = {
     description: "Get reviews by car id",
     parameters: [
         {
-            type: "string",
+            schema: {
+                type: "string"
+            },
             name: "car_id",
             in: "query",
             required: true,
@@ -96,9 +98,11 @@ const deleteReviewDoc = {
     description: "Delete review by id",
     parameters: [
         {
-            type: "string",
+            schema: {
+                type: "string"
+            },
             name: "id",
-            in: "params",
+            in: "path",
             required: true,
             description: "Review id",
         }

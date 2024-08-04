@@ -77,7 +77,8 @@ const getCarInfo = {
             schema: {
                 type: "string"
             },
-            description: "Car id"
+            description: "Car id",
+            required: true
         }
     ],
     summary: "Get car",
@@ -165,7 +166,8 @@ const putCarInfo = {
             schema: {
                 type: "string"
             },
-            description: "Car id"
+            description: "Car id",
+            required: true
         }
     ],
     summary: "Update car",
@@ -225,7 +227,8 @@ const deleteCarInfo = {
             schema: {
                 type: "string"
             },
-            description: "Car id"
+            description: "Car id",
+            required: true
         }
     ],
     summary: "Delete car",

@@ -34,6 +34,17 @@ const getBlogDoc = {
     path: "/:id",
     summary: "Get blog",
     tags: ["Blog"],
+    parameters: [
+        {
+            name: "id",
+            in: "path",
+            schema: {
+                type: "string"
+            },
+            description: "Blog id",
+            required: true
+        }
+    ],
     description: "Get blog by id",
     responses: {
         200: {
@@ -113,6 +124,17 @@ const putBlogDoc = {
     summary: "Update blog",
     tags: ["Blog"],
     description: "Update blog",
+    parameters: [
+        {
+            name: "id",
+            in: "path",
+            schema: {
+                type: "string"
+            },
+            description: "Blog id",
+            required: true
+        }
+    ],
     request: {
         body: {
             required: true,
@@ -153,6 +175,17 @@ const deleteBlogDoc = {
     summary: "Delete blog",
     tags: ["Blog"],
     description: "Delete blog",
+    parameters: [
+        {
+            name: "id",
+            in: "path",
+            schema: {
+                type: "string"
+            },
+            description: "Blog id",
+            required: true
+        }
+    ],
     responses: {
         200: {
             description: "Success",
