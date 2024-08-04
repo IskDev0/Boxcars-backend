@@ -15,7 +15,7 @@ async function getCars(c: Context) {
         const carsCount: number = await Car.countDocuments();
 
         if (!carsList) {
-            return c.json({error: "No cars found"});
+            return c.json({message: "No cars found"}, 404);
         }
 
         if (type === "short") {
@@ -25,14 +25,14 @@ async function getCars(c: Context) {
             }));
             return c.json({count: carsCount, cars: cars});
         } else if (type) {
-            return c.json({error: "Bad request"});
+            return c.json({message: "Bad request"}, 400);
         }
 
         return c.json({count: carsCount, cars: carsList});
 
     } catch (error: unknown) {
         console.error(error);
-        return c.json({error: (error as Error).message});
+        return c.json({message: (error as Error).message});
     }
 }
 
@@ -41,19 +41,19 @@ async function getCar(c: Context) {
         const id: string = c.req.param("id");
 
         if (!isValidObjectId(id)) {
-            return c.json({error: "Car not found. Invalid id"});
+            return c.json({message: "Car not found. Invalid id"}, 400);
         }
 
         const car = await Car.findById(id);
 
         if (!car) {
-            return c.json({error: "Car not found"});
+            return c.json({message: "Car not found"}, 404);
         }
 
         return c.json(car);
 
     } catch (error: unknown) {
-        return c.json({error: (error as Error).message});
+        return c.json({message: (error as Error).message});
     }
 }
 
@@ -61,7 +61,7 @@ async function postCar(c: Context) {
     const body = await c.req.json()
 
     if (!body) {
-        return c.json({error: "Bad request"});
+        return c.json({error: "Bad request"}, 400);
     }
 
     try {
@@ -69,7 +69,7 @@ async function postCar(c: Context) {
         await car.save();
         return c.json({message: "Car created successfully"});
     } catch (error: unknown) {
-        return c.json({error: (error as Error).message});
+        return c.json({message: (error as Error).message});
     }
 }
 
@@ -77,19 +77,19 @@ async function deleteCar(c: Context) {
     const id: string = c.req.param("id");
 
     if (!isValidObjectId(id)) {
-        return c.json({error: "Car not found. Invalid id"});
+        return c.json({message: "Car not found. Invalid id"}, 400);
     }
 
     try {
         const car = await Car.findByIdAndDelete(id);
         if (!car) {
-            return c.json({error: "Car not found"});
+            return c.json({message: "Car not found"}, 404);
         }
 
         return c.json({message: "Car deleted successfully"});
 
     } catch (error: unknown) {
-        return c.json({error: (error as Error).message});
+        return c.json({message: (error as Error).message});
     }
 }
 
@@ -97,25 +97,25 @@ async function updateCar(c: Context) {
     const body = await c.req.json()
 
     if (!body) {
-        return c.json({error: "Bad request"});
+        return c.json({message: "Bad request"}, 400);
     }
 
     const id: string = c.req.param("id");
 
     if (!isValidObjectId(id)) {
-        return c.json({error: "Car not found. Invalid id"});
+        return c.json({message: "Car not found. Invalid id"}, 400);
     }
 
     try {
         const car = await Car.findByIdAndUpdate(id, body, {new: true});
         if (!car) {
-            return c.json({error: "Car not found"});
+            return c.json({message: "Car not found"}, 404);
         }
 
         return c.json({message: "Car updated successfully"});
 
     } catch (error: unknown) {
-        return c.json({error: (error as Error).message});
+        return c.json({message: (error as Error).message});
     }
 
 }

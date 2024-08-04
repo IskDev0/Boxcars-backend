@@ -1,4 +1,4 @@
-import {Context, Hono} from 'hono'
+import {Context} from 'hono'
 import {cors} from "hono/cors";
 import connectDB from "./config/db";
 import Brand from "./models/brands";
@@ -6,10 +6,27 @@ import cars from "./routes/cars";
 import auth from "./routes/auth";
 import review from "./routes/review";
 import blog from "./routes/blog";
+import {OpenAPIHono} from "@hono/zod-openapi";
+import {swaggerUI} from "@hono/swagger-ui";
 
-const app = new Hono()
+const app = new OpenAPIHono()
 
-connectDB().then(r => console.log("MongoDB connected"))
+app.get(
+    '/ui',
+    swaggerUI({
+        url: '/doc'
+    })
+)
+
+app.doc('/doc', {
+    info: {
+        title: 'BoxCars API',
+        version: 'v1'
+    },
+    openapi: '3.1.0'
+})
+
+connectDB()
 
 app.use("*", cors({
     origin: process.env.FRONTEND_URL as string,

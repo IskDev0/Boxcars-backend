@@ -1,12 +1,21 @@
-import {Context, Hono} from "hono";
+import {Context} from "hono";
 import {login, refreshTokens, registerUser} from "../controllers/auth/authControllers";
+import {createRoute, OpenAPIHono} from "@hono/zod-openapi";
+import {loginDoc, registerDoc} from "../documentation/authDocumentation";
 
-const auth = new Hono()
+const auth = new OpenAPIHono()
 
-auth.post("/register", async (c: Context) => registerUser(c))
-
-auth.post("/login", async (c: Context) => login(c))
-
+//TODO: rewrite refresh and add to swagger
 auth.get("/refresh", async (c: Context) => refreshTokens(c))
+
+auth.openapi(
+    createRoute(loginDoc),
+    (c: Context) => login(c)
+)
+
+auth.openapi(
+    createRoute(registerDoc),
+    (c: Context) => registerUser(c)
+)
 
 export default auth

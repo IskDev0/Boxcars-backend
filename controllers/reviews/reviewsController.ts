@@ -5,20 +5,16 @@ import {Details, IReview} from "../../types/review/IReview";
 
 async function getReviews(c: Context) {
 
-    const car_id: string | undefined = c.req.query("car_id");
+    const car_id: string = c.req.param("car_id");
 
     if (!car_id) {
-        return c.json({error: "Car ID is not provided"});
+        return c.json({message: "Car ID is not provided"}, 404);
     }
 
     try {
         const reviews: IReview[] = await Review.find({car_id});
 
-        if (!reviews) {
-            return c.json({error: "No reviews found by this car"}, 404);
-        }
-
-        if (reviews.length === 0) {
+        if (!reviews || reviews.length === 0) {
             return c.json({error: "No reviews found by this car"}, 404);
         }
 
@@ -38,7 +34,7 @@ async function getReviews(c: Context) {
             count: reviews.length
         });
     } catch (error: unknown) {
-        return c.json({error: (error as Error).message});
+        return c.json({message: (error as Error).message});
     }
 }
 
@@ -47,7 +43,7 @@ async function postReview(c: Context) {
     const body = await c.req.json();
 
     if (!body) {
-        return c.json({error: "Body is not provided"});
+        return c.json({message: "Body is not provided"}, 400);
     }
 
     try {
@@ -63,19 +59,19 @@ async function deleteReview(c: Context) {
     const id: string = c.req.param("id");
 
     if (!id) {
-        return c.json({error: "ID is not provided"});
+        return c.json({message: "ID is not provided"}, 400);
     }
 
     try {
         let review: IReview[] = await Review.find({id});
 
         if (!review) {
-            return c.json({error: "Review not found"});
+            return c.json({message: "Review not found"}, 404);
         }
 
         return c.json({message: "Review deleted successfully"});
     } catch (error: unknown) {
-        return c.json({error: (error as Error).message});
+        return c.json({message: (error as Error).message});
     }
 }
 
@@ -84,7 +80,7 @@ async function deleteAllReviews(c: Context) {
         await Review.deleteMany({});
         return c.json({message: "Reviews deleted successfully"});
     } catch (error: unknown) {
-        return c.json({error: (error as Error).message});
+        return c.json({message: (error as Error).message});
     }
 }
 
